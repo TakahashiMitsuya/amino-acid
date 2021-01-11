@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>アミノ酸解析</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- ▼jQueryの読み込み -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
+
+    <form>
+        <h1>アミノ酸解析</h1>
+        <!-- テキストをインプットする -->
+        <input type="text" value="" id="ip" size="50px">
+        <!-- 出力ボタン -->
+        <input type="button" onclick="colorWords()" value="出力"><br>
+        <div id="checkGroup">
+            <label class="checkBC"><input type="checkbox" name="bc" value="A">A</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="C">C</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="D">D</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="E">E</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="F">F</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="G">G</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="H">H</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="I">I</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="K">K</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="L">L</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="M">M</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="N">N</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="P">P</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="Q">Q</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="R">R</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="S">S</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="T">T</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="V">V</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="W">W</label>
+            <label class="checkBC"><input type="checkbox" name="bc" value="Y">Y</label>
+            <input type="button" onclick="backColor();" value="マーク">
+            <input type="button" onclick="deleteCheck();" value="全てのチェックを外す">
+        </div>
+
+        <!-- 文字数 -->
+        <div id="wc"></div>
+        <!-- テキストをアウトプットする -->
+        <div id="op"></div>
+        <script type="text/javascript">
+            var colorWords = function () { //関数colorWordsを定義
+                var wordArray = []; //配列
+                var text = document.getElementById('ip').value.replace(/\s+/g, ""); //テキストを変数textに入力する
+                // text = DeleteNewLine(text);
+                for (var i = 0; i * 10 < text.length; i++) {
+                    var tmp = text.slice(i * 30, i * 30 + 10) + '&emsp;' + text.slice(i * 30 + 10, i * 30 + 20) + '&emsp;' + text.slice(i * 30 + 20, i * 30 + 30);
+                    wordArray[i] = tmp.substr(0, 42); //30文字+空白2文字ずつ区切って配列に代入
+                }
+                document.getElementById('op').innerHTML = wordArray.join('<br>');
+
+                // 1文字ごとにspanタグを設定する
+                $("#op").children().addBack().contents().each(function () {
+                    if (this.nodeType == 3) {
+                        var $this = $(this);
+                        // if ($this.text().charAt(1) == '1') {
+                        $this.replaceWith($this.text().replace(/(\S)/g, "<span class='font_$&'><tt>$&</tt></span>"));
+                        // }
+                    }
+                });
+            }
+            // 背景色をつける
+            function backColor() { //ボタンが押されたとき
+                var word = document.getElementsByName("bc");
+                for (var i = 0; i < word.length; i++) {
+                    var changeBCWord = document.querySelectorAll('.font_' + word[i].value); //指定したクラスのすべての文字を配列に入れる
+                    if (word[i].checked) { //チェックがついているとき背景色をつける
+                        changeBCWord.forEach(function (a) {
+                            a.style.background = 'black';
+                        });
+                    } else { //チェックが外れているとき背景色をなくす
+                        changeBCWord.forEach(function (a) {
+                            a.style.background = 'none';
+                        });
+                    }
+                }
+            }
+            function deleteCheck() { //全てのチェックを外す
+                var word = document.getElementsByName("bc");
+                for (var i = 0; i < word.length; i++) {
+                    word[i].checked = false;
+                    backColor();
+                }
+            }
+        </script>
+    </form>
+    <style>
+        :root {
+            --yellow: rgb(248, 230, 66);
+            --green: rgb(2, 184, 2);
+            --red: rgb(255, 92, 92);
+            --blue: rgb(66, 66, 252);
+        }
+
+        body {
+            background-color: rgb(171, 196, 219);
+            /* font-family: monospace; */
+        }
+
+        #op {
+            font-size: 2em;
+            font-weight: bold;
+            /* letter-spacing: 0.5em; */
+            line-height: 2;
+            margin-left: 30px;
+            -webkit-text-stroke: 0.1px #000000;
+        }
+
+        span {
+            padding: 0 0.2em;
+        }
+
+        .checkBC {
+            font-size: 1.2em;
+            margin-right: 0.1em;
+        }
+
+        #checkGroup {
+            margin-top: 20px;
+        }
+
+        .checkBC input[type=checkbox] {
+            width: 13px;
+            height: 13px;
+            -moz-transform: scale(1.4);
+            -webkit-transform: scale(1.4);
+            transform: scale(1.4);
+        }
+
+        .font_A {
+            color: var(--green);
+        }
+
+        .font_C {
+            color: var(--green);
+        }
+
+        .font_D {
+            color: var(--blue);
+        }
+
+        .font_E {
+            color: var(--blue);
+        }
+
+        .font_F {
+            color: var(--green);
+        }
+
+        .font_G {
+            color: var(--green);
+        }
+
+        .font_H {
+            color: var(--red);
+        }
+
+        .font_I {
+            color: var(--green);
+        }
+
+        .font_K {
+            color: var(--red);
+        }
+
+        .font_L {
+            color: var(--green);
+        }
+
+        .font_M {
+            color: var(--green);
+        }
+
+        .font_N {
+            color: var(--yellow);
+        }
+
+        .font_P {
+            color: var(--green);
+        }
+
+        .font_Q {
+            color: var(--yellow);
+        }
+
+        .font_R {
+            color: var(--red);
+        }
+
+        .font_S {
+            color: var(--yellow);
+        }
+
+        .font_T {
+            color: var(--yellow);
+        }
+
+        .font_V {
+            color: var(--green);
+        }
+
+        .font_W {
+            color: var(--green);
+        }
+
+        .font_Y {
+            color: var(--yellow);
+        }
+    </style>
+</body>
+
+</html>
